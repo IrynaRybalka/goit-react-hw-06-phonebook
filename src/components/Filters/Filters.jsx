@@ -1,10 +1,15 @@
+import { useDispatch } from 'react-redux';
 import { Input } from './Filters.styled';
+import { changeFilter } from 'store/filterSlice';
 
-export const Filters = ({ onChangeFilter }) => {
+
+
+export const Filters = () => {
+  const dispatch = useDispatch();
   return (
     <div>
       Find number by name:
-      <Input type="text" onChange={evt => onChangeFilter(evt.target.value)} />
+      <Input type="text" onChange={evt => dispatch(changeFilter(evt.target.value))} />
     </div>
   );
 };

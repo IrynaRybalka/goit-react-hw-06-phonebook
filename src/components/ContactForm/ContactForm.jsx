@@ -1,5 +1,8 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'store/contactSlice';
+
 import {
   BtnAdd,
   ErrorMess,
@@ -8,6 +11,8 @@ import {
   Label,
 } from './ContactForm.styled';
 
+
+
 const SingupSchema = Yup.object().shape({
   name: Yup.string().required('Required'),
   number: Yup.string()
@@ -15,7 +20,9 @@ const SingupSchema = Yup.object().shape({
     .required('Required'),
 });
 
-export const ContactForm = ({ onAdd }) => {
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts)
   return (
     <Formik
       initialValues={{
@@ -24,7 +31,12 @@ export const ContactForm = ({ onAdd }) => {
       }}
       validationSchema={SingupSchema}
       onSubmit={(values, actions) => {
-        onAdd(values);
+       const isContacts = contacts.some(contact=>contact.name.toLowerCase().includes(values.name.toLowerCase()));  if (isContacts) {
+        alert(`${values.name} alredy in contacts`);
+        actions.resetForm();
+        return;
+      }
+      dispatch(addContact(values));
 
         actions.resetForm();
       }}
